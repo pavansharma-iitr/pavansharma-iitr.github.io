@@ -12,15 +12,157 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             line-height: 1.6;
-            color: #333;
+            color: #1a1a1a;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            perspective: 1000px;
+            overflow-x: hidden;
         }
 
-        /* Animated background particles */
+        /* Floating Navigation Orb */
+        .nav-orb {
+            position: fixed;
+            top: 50%;
+            right: 30px;
+            transform: translateY(-50%);
+            z-index: 1000;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .nav-trigger {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6, #ec4899);
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 32px rgba(99, 102, 241, 0.4);
+            backdrop-filter: blur(20px);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-trigger::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(from 0deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            animation: rotate 3s linear infinite;
+        }
+
+        .nav-trigger:hover {
+            transform: scale(1.1);
+            box-shadow: 0 12px 40px rgba(99, 102, 241, 0.6);
+        }
+
+        .nav-icon {
+            position: relative;
+            z-index: 1;
+            color: white;
+            font-size: 24px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-items {
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .nav-orb.active .nav-items {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(-50%) translateX(-80px);
+        }
+
+        .nav-item {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 25px;
+            padding: 12px 20px;
+            text-decoration: none;
+            color: #1a1a1a;
+            font-weight: 500;
+            font-size: 14px;
+            white-space: nowrap;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.3s ease;
+            transform: translateX(20px);
+            opacity: 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .nav-item:hover::before {
+            left: 100%;
+        }
+
+        .nav-orb.active .nav-item {
+            transform: translateX(0);
+            opacity: 1;
+        }
+
+        .nav-orb.active .nav-item:nth-child(1) { transition-delay: 0.1s; }
+        .nav-orb.active .nav-item:nth-child(2) { transition-delay: 0.15s; }
+        .nav-orb.active .nav-item:nth-child(3) { transition-delay: 0.2s; }
+        .nav-orb.active .nav-item:nth-child(4) { transition-delay: 0.25s; }
+        .nav-orb.active .nav-item:nth-child(5) { transition-delay: 0.3s; }
+        .nav-orb.active .nav-item:nth-child(6) { transition-delay: 0.35s; }
+        .nav-orb.active .nav-item:nth-child(7) { transition-delay: 0.4s; }
+        .nav-orb.active .nav-item:nth-child(8) { transition-delay: 0.45s; }
+        .nav-orb.active .nav-item:nth-child(9) { transition-delay: 0.5s; }
+
+        .nav-item:hover {
+            background: rgba(99, 102, 241, 0.1);
+            transform: translateX(-5px) scale(1.05);
+            box-shadow: 0 8px 30px rgba(99, 102, 241, 0.2);
+        }
+
+        /* Progress Indicator */
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: rgba(255, 255, 255, 0.1);
+            z-index: 1001;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899);
+            width: 0%;
+            transition: width 0.1s ease;
+        }
+
+        /* Animated background */
         .bg-animation {
             position: fixed;
             top: 0;
@@ -28,102 +170,53 @@
             width: 100%;
             height: 100%;
             overflow: hidden;
-            z-index: -1;
+            z-index: -2;
         }
 
-        .particle {
+        .bg-gradient {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #667eea 100%);
+            animation: gradientShift 15s ease-in-out infinite;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #667eea 100%); }
+            33% { background: linear-gradient(135deg, #f093fb 0%, #f5576c 50%, #4facfe 100%); }
+            66% { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 50%, #667eea 100%); }
+        }
+
+        .floating-shapes {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .shape {
             position: absolute;
             background: rgba(255, 255, 255, 0.1);
             border-radius: 50%;
-            animation: float 6s ease-in-out infinite;
+            animation: float 20s infinite linear;
         }
 
-        .particle:nth-child(1) { width: 20px; height: 20px; left: 10%; animation-delay: 0s; }
-        .particle:nth-child(2) { width: 30px; height: 30px; left: 20%; animation-delay: 2s; }
-        .particle:nth-child(3) { width: 15px; height: 15px; left: 30%; animation-delay: 4s; }
-        .particle:nth-child(4) { width: 25px; height: 25px; left: 40%; animation-delay: 1s; }
-        .particle:nth-child(5) { width: 18px; height: 18px; left: 50%; animation-delay: 3s; }
-        .particle:nth-child(6) { width: 22px; height: 22px; left: 60%; animation-delay: 5s; }
-        .particle:nth-child(7) { width: 16px; height: 16px; left: 70%; animation-delay: 1.5s; }
-        .particle:nth-child(8) { width: 28px; height: 28px; left: 80%; animation-delay: 3.5s; }
-        .particle:nth-child(9) { width: 12px; height: 12px; left: 90%; animation-delay: 0.5s; }
+        .shape:nth-child(1) { width: 80px; height: 80px; left: 10%; animation-duration: 25s; }
+        .shape:nth-child(2) { width: 120px; height: 120px; left: 20%; animation-duration: 30s; animation-delay: -5s; }
+        .shape:nth-child(3) { width: 60px; height: 60px; left: 30%; animation-duration: 20s; animation-delay: -10s; }
+        .shape:nth-child(4) { width: 100px; height: 100px; left: 40%; animation-duration: 35s; animation-delay: -15s; }
+        .shape:nth-child(5) { width: 90px; height: 90px; left: 50%; animation-duration: 28s; animation-delay: -8s; }
+        .shape:nth-child(6) { width: 70px; height: 70px; left: 60%; animation-duration: 22s; animation-delay: -12s; }
+        .shape:nth-child(7) { width: 110px; height: 110px; left: 70%; animation-duration: 32s; animation-delay: -18s; }
+        .shape:nth-child(8) { width: 85px; height: 85px; left: 80%; animation-duration: 26s; animation-delay: -6s; }
 
         @keyframes float {
-            0%, 100% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
             10% { opacity: 1; }
             90% { opacity: 1; }
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            border-radius: 20px;
-            box-shadow: 
-                0 25px 50px rgba(0, 0, 0, 0.2),
-                0 0 0 1px rgba(255, 255, 255, 0.1);
-            min-height: 100vh;
-            transform-style: preserve-3d;
-            animation: slideIn 1s ease-out;
-            position: relative;
-            overflow: hidden;
-        }
-
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(50px) rotateX(-10deg);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0) rotateX(0deg);
-            }
-        }
-
-        .container::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-            animation: shimmer 3s infinite;
-        }
-
-        @keyframes shimmer {
-            0% { left: -100%; }
-            100% { left: 100%; }
-        }
-
-        .header {
-            display: flex;
-            align-items: center;
-            gap: 40px;
-            margin-bottom: 40px;
-            padding: 30px;
-            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
-            border-radius: 20px;
-            color: white;
-            position: relative;
-            overflow: hidden;
-            transform-style: preserve-3d;
-            box-shadow: 
-                0 20px 40px rgba(99, 102, 241, 0.3),
-                inset 0 1px 0 rgba(255, 255, 255, 0.2);
-        }
-
-        .header::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: conic-gradient(from 0deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-            animation: rotate 10s linear infinite;
+            100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
         }
 
         @keyframes rotate {
@@ -131,501 +224,50 @@
             100% { transform: rotate(360deg); }
         }
 
-        .photo-section {
-            flex-shrink: 0;
-            position: relative;
-            z-index: 2;
-        }
-
-        .profile-photo {
-            width: 220px;
-            height: 260px;
-            border-radius: 20px;
-            border: 4px solid rgba(255, 255, 255, 0.3);
-            object-fit: cover;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
-            backdrop-filter: blur(10px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: rgba(255, 255, 255, 0.8);
-            font-size: 14px;
-            text-align: center;
-            background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>');
-            background-size: 60px;
-            background-repeat: no-repeat;
-            background-position: center 40%;
-            transition: all 0.3s ease;
-            transform-style: preserve-3d;
-            position: relative;
-        }
-
-        .profile-photo::before {
-            content: '';
-            position: absolute;
-            top: -2px;
-            left: -2px;
-            right: -2px;
-            bottom: -2px;
-            background: linear-gradient(45deg, #ff006e, #8338ec, #3a86ff, #06ffa5);
-            border-radius: 22px;
-            z-index: -1;
-            animation: borderGlow 3s ease-in-out infinite;
-        }
-
-        @keyframes borderGlow {
-            0%, 100% { opacity: 0.5; }
-            50% { opacity: 1; }
-        }
-
-        .profile-photo:hover {
-            transform: translateZ(20px) rotateY(5deg);
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
-        }
-
-        .header-content {
-            flex: 1;
-            z-index: 2;
-            position: relative;
-        }
-
-        .header-content h1 {
-            font-size: 3em;
-            margin-bottom: 10px;
-            background: linear-gradient(45deg, #fff, #e0e7ff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            animation: textGlow 2s ease-in-out infinite alternate;
-            text-shadow: 0 0 30px rgba(255, 255, 255, 0.3);
-        }
-
-        @keyframes textGlow {
-            from { text-shadow: 0 0 20px rgba(255, 255, 255, 0.3); }
-            to { text-shadow: 0 0 30px rgba(255, 255, 255, 0.6); }
-        }
-
-        .header-content .title {
-            font-size: 1.4em;
-            font-weight: 600;
-            margin-bottom: 15px;
-            color: rgba(255, 255, 255, 0.9);
-            animation: slideInRight 1s ease-out 0.3s both;
-        }
-
-        .header-content .department {
-            font-size: 1.1em;
-            margin-bottom: 20px;
-            line-height: 1.5;
-            color: rgba(255, 255, 255, 0.8);
-            animation: slideInRight 1s ease-out 0.6s both;
-        }
-
-        @keyframes slideInRight {
-            from {
-                opacity: 0;
-                transform: translateX(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-
-        .contact-info {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 12px;
-            font-size: 0.95em;
-            animation: slideInRight 1s ease-out 0.9s both;
-        }
-
-        .contact-info div {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 8px 12px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            backdrop-filter: blur(10px);
-            transition: all 0.3s ease;
-            transform-style: preserve-3d;
-        }
-
-        .contact-info div:hover {
-            background: rgba(255, 255, 255, 0.2);
-            transform: translateZ(5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-        }
-
-        .contact-info a {
-            color: white;
-            text-decoration: none;
-            transition: all 0.3s ease;
-        }
-
-        .contact-info a:hover {
-            text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
-        }
-
-        .section {
-            margin-bottom: 40px;
-            animation: fadeInUp 0.8s ease-out;
-            animation-fill-mode: both;
-        }
-
-        .section:nth-child(2) { animation-delay: 0.1s; }
-        .section:nth-child(3) { animation-delay: 0.2s; }
-        .section:nth-child(4) { animation-delay: 0.3s; }
-        .section:nth-child(5) { animation-delay: 0.4s; }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .section h2 {
-            font-size: 2em;
-            color: #1e293b;
-            margin-bottom: 25px;
-            position: relative;
-            padding-bottom: 10px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            scroll-margin-top: 80px;
-        }
-
-        .section h2:hover {
-            color: #6366f1;
-            transform: scale(1.02);
-        }
-
-        .section h2::before {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 80px;
-            height: 4px;
-            background: linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899);
-            border-radius: 2px;
-            animation: expandWidth 1s ease-out;
-        }
-
-        @keyframes expandWidth {
-            from { width: 0; }
-            to { width: 80px; }
-        }
-
-        .intro {
-            font-size: 1.2em;
-            text-align: justify;
-            line-height: 1.8;
-            color: #475569;
-            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.1));
-            padding: 30px;
-            border-radius: 20px;
-            border: 1px solid rgba(99, 102, 241, 0.2);
-            backdrop-filter: blur(10px);
-            position: relative;
-            overflow: hidden;
-            transform-style: preserve-3d;
-            transition: all 0.3s ease;
-        }
-
-        .intro::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-            transform: translateX(-100%);
-            transition: transform 0.6s ease;
-        }
-
-        .intro:hover::before {
-            transform: translateX(100%);
-        }
-
-        .intro:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(99, 102, 241, 0.15);
-        }
-
-        .intro a {
-            color: #6366f1;
-            text-decoration: none;
-            font-weight: 600;
-            position: relative;
-            transition: all 0.3s ease;
-        }
-
-        .intro a::after {
-            content: '';
-            position: absolute;
-            width: 0;
-            height: 2px;
-            bottom: -2px;
-            left: 0;
-            background: linear-gradient(90deg, #6366f1, #8b5cf6);
-            transition: width 0.3s ease;
-        }
-
-        .intro a:hover::after {
-            width: 100%;
-        }
-
-        .card-3d {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.7));
+        /* Main container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            border-radius: 20px;
-            padding: 25px;
-            margin-bottom: 20px;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            transform-style: preserve-3d;
-            position: relative;
+            border-radius: 30px;
+            box-shadow: 
+                0 25px 50px rgba(0, 0, 0, 0.15),
+                0 0 0 1px rgba(255, 255, 255, 0.1);
             overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            position: relative;
+            z-index: 1;
+            margin-top: 20px;
+            margin-bottom: 20px;
         }
 
-        .card-3d::before {
+        .container::before {
             content: '';
             position: absolute;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, rgba(99, 102, 241, 0.05), rgba(139, 92, 246, 0.05));
-            opacity: 0;
-            transition: opacity 0.3s ease;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f59e0b, #10b981);
+            background-size: 300% 100%;
+            animation: gradientMove 3s ease-in-out infinite;
         }
 
-        .card-3d:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        @keyframes gradientMove {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
         }
 
-        .card-3d:hover::before {
-            opacity: 1;
-        }
-
-        .education-item { border-left: 4px solid #06b6d4; }
-        .work-item { border-left: 4px solid #f59e0b; }
-        .project-item { border-left: 4px solid #10b981; }
-        .teaching-item { border-left: 4px solid #ef4444; }
-        .cert-item { border-left: 4px solid #8b5cf6; }
-
-        .item-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 15px;
-            flex-wrap: wrap;
-        }
-
-        .degree, .position, .project-title, .cert-title {
-            font-size: 1.3em;
-            font-weight: bold;
-            color: #1e293b;
-            margin-bottom: 8px;
-            background: linear-gradient(45deg, #1e293b, #475569);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .institution, .company, .cert-provider {
-            font-weight: 600;
-            color: #6366f1;
-            margin-bottom: 8px;
-        }
-
-        .date {
-            font-weight: bold;
-            color: #f59e0b;
-            font-size: 0.9em;
-            padding: 5px 12px;
-            background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(245, 158, 11, 0.05));
-            border-radius: 15px;
-            border: 1px solid rgba(245, 158, 11, 0.3);
-            white-space: nowrap;
-        }
-
-        .cgpa {
-            color: #10b981;
-            font-weight: bold;
-            margin-bottom: 8px;
-            padding: 3px 8px;
-            background: rgba(16, 185, 129, 0.1);
-            border-radius: 8px;
-            display: inline-block;
-        }
-
-        .skills-grid, .research-grid, .certifications-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 20px;
-        }
-
-        .skill-category, .research-category {
-            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.05));
-            padding: 25px;
-            border-radius: 20px;
-            border: 1px solid rgba(99, 102, 241, 0.2);
-            transition: all 0.3s ease;
-            transform-style: preserve-3d;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .skill-category::before, .research-category::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: conic-gradient(from 0deg, transparent, rgba(99, 102, 241, 0.05), transparent);
-            animation: rotate 15s linear infinite;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .skill-category:hover::before, .research-category:hover::before {
-            opacity: 1;
-        }
-
-        .skill-category:hover, .research-category:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 25px rgba(99, 102, 241, 0.15);
-        }
-
-        .skill-category h3, .research-category h3 {
-            color: #1e293b;
-            margin-bottom: 15px;
-            font-size: 1.2em;
-            position: relative;
-            z-index: 1;
-        }
-
-        .skill-category ul, .research-category ul {
-            list-style: none;
-            padding: 0;
-            position: relative;
-            z-index: 1;
-        }
-
-        .skill-category li, .research-category li {
-            padding: 8px 0;
-            color: #475569;
-            position: relative;
-            padding-left: 20px;
-            transition: all 0.3s ease;
-        }
-
-        .skill-category li:before, .research-category li:before {
-            content: "▸";
-            color: #6366f1;
-            font-weight: bold;
-            position: absolute;
-            left: 0;
-            transition: all 0.3s ease;
-        }
-
-        .skill-category li:hover, .research-category li:hover {
-            color: #1e293b;
-            transform: translateX(5px);
-        }
-
-        .skill-category li:hover:before, .research-category li:hover:before {
-            color: #8b5cf6;
-            transform: scale(1.2);
-        }
-
-        .publications-section {
-            background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(239, 68, 68, 0.05));
-            padding: 30px;
-            border-radius: 20px;
-            border: 1px solid rgba(239, 68, 68, 0.2);
-        }
-
-        .publication-item {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.7));
-            margin-bottom: 20px;
-            padding: 20px;
-            border-radius: 15px;
-            border-left: 4px solid #6366f1;
-            transition: all 0.3s ease;
-            transform-style: preserve-3d;
-        }
-
-        .publication-item:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-        }
-
-        .awards-section {
-            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(16, 185, 129, 0.05));
-            padding: 30px;
-            border-radius: 20px;
-            border: 1px solid rgba(16, 185, 129, 0.2);
-        }
-
-        .awards-section ul {
-            list-style: none;
-            padding: 0;
-        }
-
-        .awards-section li {
-            padding: 15px 0;
-            border-bottom: 1px solid rgba(16, 185, 129, 0.2);
-            color: #475569;
-            position: relative;
-            padding-left: 40px;
-            transition: all 0.3s ease;
-        }
-
-        .awards-section li:before {
-            content: "🏆";
-            position: absolute;
-            left: 0;
-            top: 15px;
-            transition: all 0.3s ease;
-        }
-
-        .awards-section li:hover {
-            color: #1e293b;
-            transform: translateX(10px);
-        }
-
-        .awards-section li:hover:before {
-            transform: scale(1.2) rotate(10deg);
-        }
-
-        .contact-details {
+        /* Header section */
+        .hero-section {
+            padding: 60px 40px;
             background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #ec4899 100%);
             color: white;
-            padding: 40px;
-            border-radius: 25px;
-            text-align: center;
             position: relative;
             overflow: hidden;
-            transform-style: preserve-3d;
-            box-shadow: 0 25px 50px rgba(99, 102, 241, 0.3);
         }
 
-        .contact-details::before {
+        .hero-section::before {
             content: '';
             position: absolute;
             top: -50%;
@@ -636,341 +278,563 @@
             animation: rotate 20s linear infinite;
         }
 
-        .contact-details h3 {
-            margin-bottom: 20px;
+        .hero-content {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 50px;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .profile-container {
+            position: relative;
+            display: flex;
+            justify-content: center;
+        }
+
+        .profile-photo {
+            width: 250px;
+            height: 300px;
+            border-radius: 25px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            object-fit: cover;
+            transition: all 0.5s ease;
+            position: relative;
+            overflow: hidden;
+            display: block;
+        }
+
+        .profile-photo::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, #ff006e, #8338ec, #3a86ff, #06ffa5);
+            border-radius: 27px;
+            z-index: -1;
+            animation: borderGlow 4s ease-in-out infinite;
+        }
+
+        @keyframes borderGlow {
+            0%, 100% { opacity: 0.7; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.02); }
+        }
+
+        .profile-photo:hover {
+            transform: translateY(-10px) scale(1.05);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .hero-text h1 {
+            font-size: 3.5em;
+            font-weight: 700;
+            margin-bottom: 15px;
+            background: linear-gradient(45deg, #fff, #e0e7ff, #fff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            background-size: 200% 100%;
+            animation: textShine 3s ease-in-out infinite;
+        }
+
+        @keyframes textShine {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .hero-text .subtitle {
             font-size: 1.5em;
-            position: relative;
-            z-index: 1;
-        }
-
-        .contact-details p {
             margin-bottom: 10px;
-            position: relative;
-            z-index: 1;
+            opacity: 0.95;
+            font-weight: 500;
         }
 
-        .contact-details a {
-            color: rgba(255, 255, 255, 0.9);
-            text-decoration: none;
-            transition: all 0.3s ease;
-            position: relative;
-            z-index: 1;
+        .hero-text .department {
+            font-size: 1.1em;
+            opacity: 0.85;
+            margin-bottom: 30px;
+            line-height: 1.6;
         }
 
-        .contact-details a:hover {
-            color: white;
-            text-shadow: 0 0 15px rgba(255, 255, 255, 0.8);
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 30px;
         }
 
-        /* Navigation Menu Styles */
-        .nav-menu {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            border-radius: 15px;
-            padding: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            z-index: 1000;
-            max-height: 80vh;
-            overflow-y: auto;
-            transition: all 0.3s ease;
-            transform: translateX(100%);
-        }
-
-        .nav-menu.open {
-            transform: translateX(0);
-        }
-
-        .nav-toggle {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: linear-gradient(135deg, #6366f1, #8b5cf6);
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            cursor: pointer;
-            box-shadow: 0 5px 15px rgba(99, 102, 241, 0.3);
-            z-index: 1001;
-            transition: all 0.3s ease;
+        .contact-item {
             display: flex;
             align-items: center;
-            justify-content: center;
-            font-size: 18px;
+            gap: 10px;
+            padding: 12px 16px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
         }
 
-        .nav-toggle:hover {
-            transform: scale(1.1);
-            box-shadow: 0 8px 25px rgba(99, 102, 241, 0.4);
+        .contact-item:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-2px);
         }
 
-        .nav-menu h3 {
-            color: #1e293b;
-            margin-bottom: 15px;
-            font-size: 1.1em;
+        .contact-item a {
+            color: white;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        /* Section styles */
+        .section {
+            padding: 60px 40px;
+            position: relative;
+        }
+
+        .section:nth-child(even) {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.03), rgba(139, 92, 246, 0.03));
+        }
+
+        .section-title {
+            font-size: 2.5em;
+            font-weight: 700;
             text-align: center;
-            border-bottom: 2px solid #6366f1;
-            padding-bottom: 8px;
+            margin-bottom: 50px;
+            background: linear-gradient(135deg, #1a1a1a, #6366f1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            position: relative;
         }
 
-        .nav-menu ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background: linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899);
+            border-radius: 2px;
         }
 
-        .nav-menu li {
+        /* Card styles */
+        .card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.1), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .card:hover::before {
+            left: 100%;
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            border-color: rgba(99, 102, 241, 0.3);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .card-title {
+            font-size: 1.4em;
+            font-weight: 700;
+            color: #1a1a1a;
             margin-bottom: 8px;
         }
 
-        .nav-menu a {
-            color: #475569;
-            text-decoration: none;
-            display: block;
-            padding: 8px 12px;
-            border-radius: 8px;
-            transition: all 0.3s ease;
+        .card-subtitle {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #6366f1;
+            margin-bottom: 8px;
+        }
+
+        .date-badge {
+            background: linear-gradient(135deg, #f59e0b, #f97316);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
             font-size: 0.9em;
-            position: relative;
+            font-weight: 600;
+            white-space: nowrap;
         }
 
-        .nav-menu a:hover {
-            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.1));
-            color: #6366f1;
-            transform: translateX(5px);
+        /* Grid layouts */
+        .grid {
+            display: grid;
+            gap: 25px;
         }
 
-        .nav-menu a::before {
-            content: '▸';
-            position: absolute;
-            left: -10px;
-            opacity: 0;
+        .grid-2 { grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); }
+        .grid-3 { grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); }
+
+        /* Skill categories */
+        .skill-card {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.05));
+            border-radius: 20px;
+            padding: 25px;
+            border: 1px solid rgba(99, 102, 241, 0.2);
             transition: all 0.3s ease;
+        }
+
+        .skill-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(99, 102, 241, 0.15);
+        }
+
+        .skill-card h3 {
+            font-size: 1.3em;
+            margin-bottom: 15px;
+            color: #1a1a1a;
+        }
+
+        .skill-list {
+            list-style: none;
+        }
+
+        .skill-list li {
+            padding: 8px 0;
+            color: #4a5568;
+            position: relative;
+            padding-left: 20px;
+        }
+
+        .skill-list li::before {
+            content: "→";
+            position: absolute;
+            left: 0;
             color: #6366f1;
+            font-weight: bold;
         }
 
-        .nav-menu a:hover::before {
-            opacity: 1;
-            left: -5px;
-        }
-            .container {
-                margin: 10px;
-                padding: 15px;
-            }
-            
-            .header {
-                flex-direction: column;
-                text-align: center;
-                gap: 25px;
-            }
-
-            .profile-photo {
-                width: 180px;
-                height: 200px;
-            }
-            
-            .header-content h1 {
-                font-size: 2.2em;
-            }
-
-            .contact-info {
-                grid-template-columns: 1fr;
-            }
-            
-            .section h2 {
-                font-size: 1.6em;
-            }
-
-            .item-header {
-                flex-direction: column;
-            }
-
-            .date {
-                margin-left: 0;
-                margin-top: 10px;
-            }
-
-            .skills-grid, .research-grid, .certifications-grid {
-                grid-template-columns: 1fr;
-            }
+        /* Contact section */
+        .contact-section {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 50%, #f1f5f9 100%) !important;
+            color: #1a1a1a;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
         }
 
-        /* Scroll animations */
-        .scroll-animate {
+        .contact-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(from 0deg, transparent, rgba(99, 102, 241, 0.05), transparent);
+            animation: rotate 25s linear infinite;
+            z-index: 1;
+        }
+
+        .contact-content {
+            position: relative;
+            z-index: 10;
+            background: transparent;
+            backdrop-filter: none;
+            border-radius: 0;
+        }
+
+        .contact-content p {
+            color: #1a1a1a !important;
+            font-weight: 600;
+            text-shadow: none;
+        }
+
+        .contact-section .section-title {
+            color: #1a1a1a !important;
+            background: linear-gradient(135deg, #1a1a1a, #6366f1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: none;
+        }
+
+        /* Animations */
+        .fade-in {
             opacity: 0;
             transform: translateY(30px);
             transition: all 0.6s ease;
         }
 
-        .scroll-animate.animate {
+        .fade-in.visible {
             opacity: 1;
             transform: translateY(0);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-orb {
+                right: 20px;
+                top: 20px;
+                transform: none;
+            }
+
+            .nav-orb.active .nav-items {
+                transform: translateX(-70px) translateY(20px);
+                flex-direction: column;
+            }
+
+            .hero-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+                gap: 30px;
+            }
+
+            .hero-text h1 {
+                font-size: 2.5em;
+            }
+
+            .contact-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .grid-2, .grid-3 {
+                grid-template-columns: 1fr;
+            }
+
+            .section {
+                padding: 40px 20px;
+            }
+
+            .container {
+                margin: 10px;
+                border-radius: 20px;
+            }
         }
     </style>
 </head>
 <body>
-    <button class="nav-toggle" onclick="toggleNav()">☰</button>
-    
-    <nav class="nav-menu" id="navMenu">
-        <h3>Navigation</h3>
-        <ul>
-            <li><a href="#about" onclick="scrollToSection('about')">About</a></li>
-            <li><a href="#education" onclick="scrollToSection('education')">Education</a></li>
-            <li><a href="#experience" onclick="scrollToSection('experience')">Work Experience</a></li>
-            <li><a href="#certifications" onclick="scrollToSection('certifications')">Certifications</a></li>
-            <li><a href="#research" onclick="scrollToSection('research')">Research Interests</a></li>
-            <li><a href="#publications" onclick="scrollToSection('publications')">Publications</a></li>
-            <li><a href="#projects" onclick="scrollToSection('projects')">Projects</a></li>
-            <li><a href="#skills" onclick="scrollToSection('skills')">Technical Skills</a></li>
-            <li><a href="#teaching" onclick="scrollToSection('teaching')">Teaching</a></li>
-            <li><a href="#awards" onclick="scrollToSection('awards')">Awards</a></li>
-            <li><a href="#contact" onclick="scrollToSection('contact')">Contact</a></li>
-        </ul>
-    </nav>
+    <!-- Progress Bar -->
+    <div class="progress-bar">
+        <div class="progress-fill"></div>
+    </div>
 
+    <!-- Floating Navigation Orb -->
+    <div class="nav-orb" id="navOrb">
+        <button class="nav-trigger" onclick="toggleNavOrb()">
+            <span class="nav-icon">✦</span>
+        </button>
+        <div class="nav-items">
+            <a href="#about" class="nav-item" onclick="scrollToSection('about')">🙋‍♂️ About</a>
+            <a href="#education" class="nav-item" onclick="scrollToSection('education')">🎓 Education</a>
+            <a href="#experience" class="nav-item" onclick="scrollToSection('experience')">💼 Experience</a>
+            <a href="#certifications" class="nav-item" onclick="scrollToSection('certifications')">📜 Certifications</a>
+            <a href="#research" class="nav-item" onclick="scrollToSection('research')">🔬 Research</a>
+            <a href="#publications" class="nav-item" onclick="scrollToSection('publications')">📚 Publications</a>
+            <a href="#projects" class="nav-item" onclick="scrollToSection('projects')">🚀 Projects</a>
+            <a href="#skills" class="nav-item" onclick="scrollToSection('skills')">💻 Skills</a>
+            <a href="#contact" class="nav-item" onclick="scrollToSection('contact')">📧 Contact</a>
+        </div>
+    </div>
+
+    <!-- Animated Background -->
     <div class="bg-animation">
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
+        <div class="bg-gradient"></div>
+        <div class="floating-shapes">
+            <div class="shape"></div>
+            <div class="shape"></div>
+            <div class="shape"></div>
+            <div class="shape"></div>
+            <div class="shape"></div>
+            <div class="shape"></div>
+            <div class="shape"></div>
+            <div class="shape"></div>
+        </div>
     </div>
 
     <div class="container">
-        <header class="header">
-            <div class="photo-section">
-                <img src="profile.jpg" alt="Pavan Sharma" class="profile-photo">
-            </div>
-            <div class="header-content">
-                <h1>Pavan Sharma</h1>
-                <div class="title">Ph.D. Research Scholar</div>
-                <div class="department">
-                    Mehta Family School of Data Science and Artificial Intelligence<br>
-                    Indian Institute of Technology, Roorkee, Uttarakhand, India, 247667
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <div class="hero-content">
+                <div class="profile-container">
+                    <img src="profile.jpg" alt="Pavan Sharma" class="profile-photo">
                 </div>
-                <div class="contact-info">
-                    <div>📧 <a href="mailto:pavan_s@mfs.iitr.ac.in">pavan_s@mfs.iitr.ac.in</a></div>
-                    <div>📱 <a href="tel:+917000126806">+91-7000126806</a></div>
-                    <div>🔗 <a href="https://pavansharma-iitr.github.io" target="_blank">pavansharma-iitr.github.io</a></div>
-                    <div>💼 <a href="https://www.linkedin.com/in/pavan-sharma24" target="_blank">LinkedIn Profile</a></div>
+                <div class="hero-text">
+                    <h1>Pavan Sharma</h1>
+                    <div class="subtitle">Ph.D. Research Scholar</div>
+                    <div class="department">
+                        Mehta Family School of Data Science and Artificial Intelligence<br>
+                        Indian Institute of Technology, Roorkee, Uttarakhand, India
+                    </div>
+                    <div class="contact-grid">
+                        <div class="contact-item">
+                            <span>📧</span>
+                            <a href="mailto:pavan_s@mfs.iitr.ac.in">pavan_s@mfs.iitr.ac.in</a>
+                        </div>
+                        <div class="contact-item">
+                            <span>📱</span>
+                            <a href="tel:+917000126806">+91-7000126806</a>
+                        </div>
+                        <div class="contact-item">
+                            <span>🌐</span>
+                            <a href="https://pavansharma-iitr.github.io" target="_blank">Portfolio Website</a>
+                        </div>
+                        <div class="contact-item">
+                            <span>💼</span>
+                            <a href="https://www.linkedin.com/in/pavan-sharma24" target="_blank">LinkedIn</a>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </header>
-
-        <section class="section scroll-animate" id="about">
-            <div class="intro">
-                I am a Ph.D. student at Mehta Family School of Data Science and Artificial Intelligence, IIT Roorkee, India, supervised by <strong>Prof. Dr. Alok Bhardwaj</strong>. My major research interests include application of Artificial Intelligence in Earth Observation, with emphasis on developing scalable cloud-based frameworks for automated disaster management using satellite image analysis, big data analytics, and machine learning techniques.
             </div>
         </section>
 
-        <section class="section scroll-animate" id="education">
-            <h2>Education</h2>
-            <div class="education-item card-3d">
-                <div class="item-header">
-                    <div>
-                        <div class="degree">Ph.D., Data Science and Artificial Intelligence</div>
-                        <div class="institution">Indian Institute of Technology, Roorkee, Uttarakhand, India</div>
-                        <div class="cgpa">CGPA: 7.14/10</div>
-                        <div class="thesis-title">Thesis Title: Earth Observation Big Data Analytics Framework for Enhanced Disaster Management</div>
-                        <div class="supervisor">Supervisor: Dr. Alok Bhardwaj</div>
-                    </div>
-                    <div class="date">2023 – Present</div>
-                </div>
+        <!-- About Section -->
+        <section class="section fade-in" id="about">
+            <h2 class="section-title">About Me</h2>
+            <div class="card">
+                <p style="font-size: 1.2em; line-height: 1.8; text-align: justify; color: #4a5568;">
+                    I am a Ph.D. student at Mehta Family School of Data Science and Artificial Intelligence, IIT Roorkee, India, supervised by <strong style="color: #6366f1;">Prof. Dr. Alok Bhardwaj</strong>. My major research interests include application of Artificial Intelligence in Earth Observation, with emphasis on developing scalable cloud-based frameworks for automated disaster management using satellite image analysis, big data analytics, and machine learning techniques.
+                </p>
             </div>
+        </section>
+
+        <!-- Education Section -->
+        <section class="section fade-in" id="education">
+            <h2 class="section-title">Education</h2>
             
-            <div class="education-item card-3d">
-                <div class="item-header">
+            <div class="card">
+                <div class="card-header">
                     <div>
-                        <div class="degree">M.E., Control Systems</div>
-                        <div class="institution">Jabalpur Engineering College, Jabalpur, Madhya Pradesh, India</div>
-                        <div class="cgpa">CGPA: 8.04/10</div>
-                        <div class="thesis-title">Thesis Title: Time Frequency Analysis and Transfer Learning Based Study of Rolling Bearing Fault Classification</div>
-                        <div class="supervisor">Supervisor: Dr. Hemant Amhia</div>
+                        <div class="card-title">Ph.D., Data Science and Artificial Intelligence</div>
+                        <div class="card-subtitle">Indian Institute of Technology, Roorkee</div>
+                        <div style="color: #10b981; font-weight: 600; margin: 8px 0;">CGPA: 7.14/10</div>
+                        <div style="color: #6b7280; margin-bottom: 10px;">
+                            <strong>Thesis:</strong> Earth Observation Big Data Analytics Framework for Enhanced Disaster Management<br>
+                            <strong>Supervisor:</strong> Dr. Alok Bhardwaj
+                        </div>
                     </div>
-                    <div class="date">2019 - 2021</div>
+                    <div class="date-badge">2023 – Present</div>
                 </div>
             </div>
 
-            <div class="education-item card-3d">
-                <div class="item-header">
+            <div class="card">
+                <div class="card-header">
                     <div>
-                        <div class="degree">B.E., Electrical Engineering</div>
-                        <div class="institution">Rajiv Gandhi Proudyogiki Vishwavidyalaya (RGPV), Bhopal, Madhya Pradesh, India</div>
-                        <div class="cgpa">CGPA: 8.02/10</div>
+                        <div class="card-title">M.E., Control Systems</div>
+                        <div class="card-subtitle">Jabalpur Engineering College, Jabalpur</div>
+                        <div style="color: #10b981; font-weight: 600; margin: 8px 0;">CGPA: 8.04/10</div>
+                        <div style="color: #6b7280; margin-bottom: 10px;">
+                            <strong>Thesis:</strong> Time Frequency Analysis and Transfer Learning Based Study of Rolling Bearing Fault Classification<br>
+                            <strong>Supervisor:</strong> Dr. Hemant Amhia
+                        </div>
                     </div>
-                    <div class="date">2014 - 2018</div>
+                    <div class="date-badge">2019 - 2021</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="card-title">B.E., Electrical Engineering</div>
+                        <div class="card-subtitle">Rajiv Gandhi Proudyogiki Vishwavidyalaya (RGPV), Bhopal</div>
+                        <div style="color: #10b981; font-weight: 600; margin: 8px 0;">CGPA: 8.02/10</div>
+                    </div>
+                    <div class="date-badge">2014 - 2018</div>
                 </div>
             </div>
         </section>
 
-        <section class="section scroll-animate" id="experience">
-            <h2>Work Experience</h2>
-            <div class="work-item card-3d">
-                <div class="item-header">
+        <!-- Experience Section -->
+        <section class="section fade-in" id="experience">
+            <h2 class="section-title">Work Experience</h2>
+            
+            <div class="card">
+                <div class="card-header">
                     <div>
-                        <div class="position">Senior Engineer</div>
-                        <div class="company">Tata Elxsi – Transportation Business Unit</div>
-                        <div class="supervisor">Worked on automotive control systems with a focus on Model-Based Design (MBD) using MATLAB/Simulink.</div>
+                        <div class="card-title">Senior Engineer</div>
+                        <div class="card-subtitle">Tata Elxsi – Transportation Business Unit</div>
+                        <p style="color: #6b7280; margin-top: 10px;">
+                            Worked on automotive control systems with a focus on Model-Based Design (MBD) using MATLAB/Simulink.
+                        </p>
                     </div>
-                    <div class="date">Mar 2022 – June 2022</div>
+                    <div class="date-badge">Mar 2022 – June 2022</div>
                 </div>
             </div>
         </section>
 
-        <section class="section scroll-animate" id="certifications">
-            <h2>Certifications & Training</h2>
-            <div class="certifications-grid">
-                <div class="cert-item card-3d">
-                    <div class="cert-title">Post Graduate Diploma in Big Data Analytics (PG-DBDA)</div>
-                    <div class="cert-provider">Centre for Development of Advanced Computing (CDAC), Bangalore</div>
-                    <div class="date" style="margin-left: 0; color: #f59e0b;">Mar 2022 – Sep 2022</div>
-                    <div class="cert-details">
+        <!-- Certifications Section -->
+        <section class="section fade-in" id="certifications">
+            <h2 class="section-title">Certifications & Training</h2>
+            
+            <div class="grid grid-2">
+                <div class="card">
+                    <div class="card-title">Post Graduate Diploma in Big Data Analytics (PG-DBDA)</div>
+                    <div class="card-subtitle">Centre for Development of Advanced Computing (CDAC), Bangalore</div>
+                    <div class="date-badge" style="margin: 15px 0;">Mar 2022 – Sep 2022</div>
+                    <p style="color: #6b7280; line-height: 1.6;">
                         Key Modules: Programming in Python, R, and Java; Linux and Cloud Computing; Advanced Statistics and DBMS; Big Data tools (Hadoop, Spark); Machine Learning and Deep Learning with real-time analytics; Data Visualization and Reporting.
-                    </div>
+                    </p>
                 </div>
                 
-                <div class="cert-item card-3d">
-                    <div class="cert-title">Remote Sensing and Digital Image Analysis</div>
-                    <div class="cert-provider">Indian Institute of Remote Sensing (IIRS-ISRO)</div>
-                    <div class="date" style="margin-left: 0; color: #f59e0b;">Aug 27 – Sep 20, 2024</div>
-                    <div class="cert-details">
+                <div class="card">
+                    <div class="card-title">Remote Sensing and Digital Image Analysis</div>
+                    <div class="card-subtitle">Indian Institute of Remote Sensing (IIRS-ISRO)</div>
+                    <div class="date-badge" style="margin: 15px 0;">Aug 27 – Sep 20, 2024</div>
+                    <p style="color: #6b7280; line-height: 1.6;">
                         24-hour online duration. Covered fundamentals of satellite-based Earth observation, image interpretation, and digital processing techniques.
-                    </div>
+                    </p>
                 </div>
+            </div>
 
-                <div class="cert-item card-3d">
-                    <div class="cert-title">AI/ML Workshop on AI-Enabled Face Mask Detector</div>
-                    <div class="cert-provider">Edureka</div>
-                    <div class="cert-details">
-                        Hands-on virtual workshop focusing on AI applications in public health monitoring using computer vision techniques.
-                    </div>
-                </div>
+            <div class="card">
+                <div class="card-title">AI/ML Workshop on AI-Enabled Face Mask Detector</div>
+                <div class="card-subtitle">Edureka</div>
+                <p style="color: #6b7280; line-height: 1.6; margin-top: 15px;">
+                    Hands-on virtual workshop focusing on AI applications in public health monitoring using computer vision techniques.
+                </p>
             </div>
         </section>
 
-        <section class="section scroll-animate" id="research">
-            <h2>Research Interests</h2>
-            <div class="research-grid">
-                <div class="research-category">
+        <!-- Research Interests Section -->
+        <section class="section fade-in" id="research">
+            <h2 class="section-title">Research Interests</h2>
+            
+            <div class="grid grid-2">
+                <div class="skill-card">
                     <h3>🛰️ Earth Observation & Remote Sensing</h3>
-                    <ul>
+                    <ul class="skill-list">
                         <li>Deep Learning and Machine Learning for Earth Observation and Disaster Risk Assessment</li>
                         <li>Semantic Segmentation, Object Detection, and Classification in Multisensor Remote Sensing Data</li>
                         <li>Computer Vision for Automated Change Detection and Hazard Mapping</li>
                     </ul>
                 </div>
-                <div class="research-category">
+                
+                <div class="skill-card">
                     <h3>🤖 AI & Data Analytics</h3>
-                    <ul>
+                    <ul class="skill-list">
                         <li>Signal and Image Processing Techniques for Feature Extraction from EO Imagery</li>
                         <li>Large Language Models (LLMs) for Disaster Data Discovery and Knowledge Retrieval</li>
                         <li>Scalable AI Pipelines and Cloud-Based Architectures for Real-Time Geospatial Analytics</li>
@@ -979,66 +843,102 @@
             </div>
         </section>
 
-        <section class="section scroll-animate" id="publications">
-            <h2>Publications</h2>
-            <div class="publications-section">
-                <div class="publication-item">
-                    <div class="publication-authors">Sharma, P., Amhia, H., Sharma, S.D. (2022).</div>
-                    <div class="publication-title">"Transfer Learning-Based Model for Rolling Bearing Fault Classification Using CWT-Based Scalograms"</div>
-                    <div class="publication-venue">AISC, Springer. DOI: https://doi.org/10.1007/978-981-16-7330-6_43.</div>
+        <!-- Publications Section -->
+        <section class="section fade-in" id="publications">
+            <h2 class="section-title">Publications</h2>
+            
+            <div class="card">
+                <div class="card-title" style="color: #6366f1; margin-bottom: 10px;">
+                    "Transfer Learning-Based Model for Rolling Bearing Fault Classification Using CWT-Based Scalograms"
                 </div>
-                
-                <div class="publication-item">
-                    <div class="publication-authors">Sharma, P., Amhia, H., Sharma, S.D. (2021).</div>
-                    <div class="publication-title">"Performance Analysis of Pre-trained TL Models for Rolling Bearing Faults"</div>
-                    <div class="publication-venue">J. Phys. Conf. Ser. doi: 10.1088/1742- 6596/2070/1/012141.</div>
+                <div style="color: #6b7280; margin-bottom: 8px;">
+                    <strong>Authors:</strong> Sharma, P., Amhia, H., Sharma, S.D.
+                </div>
+                <div style="color: #6b7280; margin-bottom: 8px;">
+                    <strong>Publication:</strong> AISC, Springer (2022)
+                </div>
+                <div style="color: #6b7280;">
+                    <strong>DOI:</strong> <a href="https://doi.org/10.1007/978-981-16-7330-6_43" target="_blank" style="color: #6366f1;">https://doi.org/10.1007/978-981-16-7330-6_43</a>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title" style="color: #6366f1; margin-bottom: 10px;">
+                    "Performance Analysis of Pre-trained TL Models for Rolling Bearing Faults"
+                </div>
+                <div style="color: #6b7280; margin-bottom: 8px;">
+                    <strong>Authors:</strong> Sharma, P., Amhia, H., Sharma, S.D.
+                </div>
+                <div style="color: #6b7280; margin-bottom: 8px;">
+                    <strong>Publication:</strong> Journal of Physics: Conference Series (2021)
+                </div>
+                <div style="color: #6b7280;">
+                    <strong>DOI:</strong> <a href="https://doi.org/10.1088/1742-6596/2070/1/012141" target="_blank" style="color: #6366f1;">10.1088/1742-6596/2070/1/012141</a>
                 </div>
             </div>
         </section>
 
-        <section class="section scroll-animate" id="projects">
-            <h2>Projects</h2>
-            <div class="project-item card-3d">
-                <div class="project-title">🛩️ PG-DBDA Project: Failure Detection and Remaining Useful Life Prediction for Aircraft Engines</div>
-                <div class="supervisor">Developed predictive models to estimate component failure and remaining operational life based on sensor data using supervised learning techniques.</div>
-                <div class="tools"><strong>Tools:</strong> Python, Machine Learning, Deep Learning</div>
+        <!-- Projects Section -->
+        <section class="section fade-in" id="projects">
+            <h2 class="section-title">Projects</h2>
+            
+            <div class="card">
+                <div class="card-title">🛩️ PG-DBDA Project: Failure Detection and Remaining Useful Life Prediction for Aircraft Engines</div>
+                <p style="color: #6b7280; margin: 15px 0; line-height: 1.6;">
+                    Developed predictive models to estimate component failure and remaining operational life based on sensor data using supervised learning techniques.
+                </p>
+                <div style="background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.1)); padding: 10px 15px; border-radius: 10px; margin-top: 15px;">
+                    <strong style="color: #6366f1;">Tools:</strong> Python, Machine Learning, Deep Learning
+                </div>
             </div>
 
-            <div class="project-item card-3d">
-                <div class="project-title">⚡ Data Engineering Project: Real-Time Data Analysis Using Kafka</div>
-                <div class="supervisor">Designed a real-time data pipeline for streaming, storing, and analyzing data using Kafka and AWS cloud services.</div>
-                <div class="tools"><strong>Tools:</strong> Python, Apache Kafka, AWS EC2, S3, Glue, Athena</div>
+            <div class="card">
+                <div class="card-title">⚡ Data Engineering Project: Real-Time Data Analysis Using Kafka</div>
+                <p style="color: #6b7280; margin: 15px 0; line-height: 1.6;">
+                    Designed a real-time data pipeline for streaming, storing, and analyzing data using Kafka and AWS cloud services.
+                </p>
+                <div style="background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.1)); padding: 10px 15px; border-radius: 10px; margin-top: 15px;">
+                    <strong style="color: #6366f1;">Tools:</strong> Python, Apache Kafka, AWS EC2, S3, Glue, Athena
+                </div>
             </div>
 
-            <div class="project-item card-3d">
-                <div class="project-title">⚙️ Post-Graduation Project: Transfer Learning Based Model for Rolling Bearing Fault Classification using CWT-Based Scalograms</div>
-                <div class="supervisor">Implemented a transfer learning approach on time-frequency scalograms for accurate classification of mechanical faults in rotating machinery.</div>
-                <div class="tools"><strong>Tools:</strong> Deep Learning in MATLAB</div>
+            <div class="card">
+                <div class="card-title">⚙️ Transfer Learning Based Model for Rolling Bearing Fault Classification</div>
+                <p style="color: #6b7280; margin: 15px 0; line-height: 1.6;">
+                    Implemented a transfer learning approach on time-frequency scalograms for accurate classification of mechanical faults in rotating machinery.
+                </p>
+                <div style="background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.1)); padding: 10px 15px; border-radius: 10px; margin-top: 15px;">
+                    <strong style="color: #6366f1;">Tools:</strong> Deep Learning in MATLAB
+                </div>
             </div>
         </section>
 
-        <section class="section scroll-animate" id="skills">
-            <h2>Technical Skills</h2>
-            <div class="skills-grid">
-                <div class="skill-category">
+        <!-- Skills Section -->
+        <section class="section fade-in" id="skills">
+            <h2 class="section-title">Technical Skills</h2>
+            
+            <div class="grid grid-3">
+                <div class="skill-card">
                     <h3>💻 Programming & Development</h3>
-                    <ul>
+                    <ul class="skill-list">
                         <li>Python, Core Java, JavaScript</li>
                         <li>HTML, CSS, React, Node.js, Express</li>
                         <li>MongoDB (MERN Stack)</li>
                     </ul>
                 </div>
-                <div class="skill-category">
+                
+                <div class="skill-card">
                     <h3>☁️ Cloud & Big Data</h3>
-                    <ul>
+                    <ul class="skill-list">
                         <li>AWS (EC2, S3, Lambda, Step Functions, API Gateway, Glue, Athena, CloudWatch)</li>
                         <li>Hadoop, Hive, Spark, Kafka</li>
                         <li>SQL, MongoDB</li>
                     </ul>
                 </div>
-                <div class="skill-category">
+                
+                <div class="skill-card">
                     <h3>🧠 AI/ML & Visualization</h3>
-                    <ul>
+                    <ul class="skill-list">
                         <li>Machine Learning, Deep Learning</li>
                         <li>QGIS, Remote Sensing Image Processing</li>
                         <li>Power BI, Microsoft Excel, Matplotlib, Seaborn</li>
@@ -1048,174 +948,257 @@
             </div>
         </section>
 
-        <section class="section scroll-animate" id="teaching">
-            <h2>Teaching Assistance</h2>
-            <div class="teaching-item card-3d">
-                <div class="item-header">
-                    <div>
-                        <div class="position">🤖 Fundamentals of AI/ML (DAC-151)</div>
-                        <div class="company">IIT Roorkee — Teaching Assistant</div>
+        <!-- Teaching Section -->
+        <section class="section fade-in" id="teaching">
+            <h2 class="section-title">Teaching Assistance</h2>
+            
+            <div class="grid grid-2">
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <div class="card-title">🤖 Fundamentals of AI/ML (DAC-151)</div>
+                            <div class="card-subtitle">IIT Roorkee — Teaching Assistant</div>
+                        </div>
+                        <div class="date-badge">Jan 2024 – May 2024</div>
                     </div>
-                    <div class="date">Jan 2024 – May 2024 (Spring)</div>
                 </div>
-            </div>
 
-            <div class="teaching-item card-3d">
-                <div class="item-header">
-                    <div>
-                        <div class="position">📊 Data Science (DAI-101)</div>
-                        <div class="company">IIT Roorkee — Teaching Assistant</div>
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <div class="card-title">📊 Data Science (DAI-101)</div>
+                            <div class="card-subtitle">IIT Roorkee — Teaching Assistant</div>
+                        </div>
+                        <div class="date-badge">July 2024 – Dec 2024</div>
                     </div>
-                    <div class="date">July 2024 – Dec 2024 (Autumn)</div>
                 </div>
-            </div>
 
-            <div class="teaching-item card-3d">
-                <div class="item-header">
-                    <div>
-                        <div class="position">📊 Data Science (DAI-101)</div>
-                        <div class="company">IIT Roorkee — Teaching Assistant</div>
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <div class="card-title">📊 Data Science (DAI-101)</div>
+                            <div class="card-subtitle">IIT Roorkee — Teaching Assistant</div>
+                        </div>
+                        <div class="date-badge">Jan 2025 – May 2025</div>
                     </div>
-                    <div class="date">Jan 2025 – May 2025 (Spring)</div>
                 </div>
-            </div>
 
-            <div class="teaching-item card-3d">
-                <div class="item-header">
-                    <div>
-                        <div class="position">🛰️ AI-Based Earth Imaging Lab (DAI-103)</div>
-                        <div class="company">IIT Roorkee — Teaching Assistant</div>
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <div class="card-title">🛰️ AI-Based Earth Imaging Lab (DAI-103)</div>
+                            <div class="card-subtitle">IIT Roorkee — Teaching Assistant</div>
+                        </div>
+                        <div class="date-badge">Jan 2025 – May 2025</div>
                     </div>
-                    <div class="date">Jan 2025 – May 2025 (Spring)</div>
                 </div>
             </div>
         </section>
 
-        <section class="section scroll-animate" id="awards">
-            <h2>Awards & Scholarships</h2>
-            <div class="awards-section">
-                <ul>
-                    <li>Received Tuition Fee Waiver (TFW) Scholarship during B.E. for academic merit (2014-2018)</li>
-                    <li>MHRD Scholarship for M.E. (2019–2021) and Ph.D. (2023–2027)</li>
-                    <li>Qualified GATE (EE): 2019</li>
-                </ul>
+        <!-- Awards Section -->
+        <section class="section fade-in" id="awards">
+            <h2 class="section-title">Awards & Scholarships</h2>
+            
+            <div class="card">
+                <div style="display: flex; flex-direction: column; gap: 20px;">
+                    <div style="display: flex; align-items: center; gap: 15px; padding: 15px; background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(16, 185, 129, 0.05)); border-radius: 15px; border-left: 4px solid #10b981;">
+                        <span style="font-size: 2em;">🏆</span>
+                        <div>
+                            <strong style="color: #1a1a1a;">Tuition Fee Waiver (TFW) Scholarship</strong>
+                            <div style="color: #6b7280;">Received during B.E. for academic merit (2014-2018)</div>
+                        </div>
+                    </div>
+                    
+                    <div style="display: flex; align-items: center; gap: 15px; padding: 15px; background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(16, 185, 129, 0.05)); border-radius: 15px; border-left: 4px solid #10b981;">
+                        <span style="font-size: 2em;">🎓</span>
+                        <div>
+                            <strong style="color: #1a1a1a;">MHRD Scholarship</strong>
+                            <div style="color: #6b7280;">For M.E. (2019–2021) and Ph.D. (2023–2027)</div>
+                        </div>
+                    </div>
+                    
+                    <div style="display: flex; align-items: center; gap: 15px; padding: 15px; background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(16, 185, 129, 0.05)); border-radius: 15px; border-left: 4px solid #10b981;">
+                        <span style="font-size: 2em;">✅</span>
+                        <div>
+                            <strong style="color: #1a1a1a;">GATE Qualified</strong>
+                            <div style="color: #6b7280;">GATE (EE): 2019</div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </section>
 
-        <section class="section scroll-animate" id="contact">
-            <h2>Contact</h2>
-            <div class="contact-details">
-                <h3>✨ Get In Touch</h3>
-                <p>Mehta Family School of Data Science and Artificial Intelligence</p>
-                <p>Indian Institute of Technology, Roorkee</p>
-                <p>Uttarakhand, India - 247667</p>
-                <p>Email: <a href="mailto:pavan_s@mfs.iitr.ac.in">pavan_s@mfs.iitr.ac.in</a></p>
-                <p>Mobile: <a href="tel:+917000126806">+91-7000126806</a></p>
-                <p>Website: <a href="https://pavansharma-iitr.github.io" target="_blank">pavansharma-iitr.github.io</a></p>
-                <p>LinkedIn: <a href="https://www.linkedin.com/in/pavan-sharma24" target="_blank">linkedin.com/in/pavan-sharma24</a></p>
+        <!-- Contact Section -->
+        <section class="section contact-section fade-in" id="contact">
+            <div class="contact-content">
+                <h2 class="section-title" style="color: white; margin-bottom: 30px;">✨ Get In Touch</h2>
+                <div style="max-width: 600px; margin: 0 auto;">
+                    <p style="font-size: 1.2em; margin-bottom: 12px; color: #ffffff; font-weight: 700;">Mehta Family School of Data Science and Artificial Intelligence</p>
+                    <p style="font-size: 1.1em; margin-bottom: 12px; color: #ffffff; font-weight: 600;">Indian Institute of Technology, Roorkee</p>
+                    <p style="font-size: 1.1em; margin-bottom: 35px; color: #ffffff; font-weight: 600;">Uttarakhand, India - 247667</p>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; margin-top: 30px;">
+                        <a href="mailto:pavan_s@mfs.iitr.ac.in" style="display: flex; align-items: center; gap: 10px; padding: 15px; background: rgba(0, 0, 0, 0.8) !important; border: 2px solid rgba(255, 255, 255, 0.3); border-radius: 15px; text-decoration: none; color: #ffffff !important; font-weight: 600; transition: all 0.3s ease; backdrop-filter: blur(10px);">
+                            <span style="font-size: 1.2em;">📧</span>
+                            <span>pavan_s@mfs.iitr.ac.in</span>
+                        </a>
+                        
+                        <a href="tel:+917000126806" style="display: flex; align-items: center; gap: 10px; padding: 15px; background: rgba(0, 0, 0, 0.8) !important; border: 2px solid rgba(255, 255, 255, 0.3); border-radius: 15px; text-decoration: none; color: #ffffff !important; font-weight: 600; transition: all 0.3s ease; backdrop-filter: blur(10px);">
+                            <span style="font-size: 1.2em;">📱</span>
+                            <span>+91-7000126806</span>
+                        </a>
+                        
+                        <a href="https://pavansharma-iitr.github.io" target="_blank" style="display: flex; align-items: center; gap: 10px; padding: 15px; background: rgba(0, 0, 0, 0.8) !important; border: 2px solid rgba(255, 255, 255, 0.3); border-radius: 15px; text-decoration: none; color: #ffffff !important; font-weight: 600; transition: all 0.3s ease; backdrop-filter: blur(10px);">
+                            <span style="font-size: 1.2em;">🌐</span>
+                            <span>Portfolio Website</span>
+                        </a>
+                        
+                        <a href="https://www.linkedin.com/in/pavan-sharma24" target="_blank" style="display: flex; align-items: center; gap: 10px; padding: 15px; background: rgba(0, 0, 0, 0.8) !important; border: 2px solid rgba(255, 255, 255, 0.3); border-radius: 15px; text-decoration: none; color: #ffffff !important; font-weight: 600; transition: all 0.3s ease; backdrop-filter: blur(10px);">
+                            <span style="font-size: 1.2em;">💼</span>
+                            <span>LinkedIn Profile</span>
+                        </a>
+                    </div>
+                </div>
             </div>
         </section>
     </div>
 
     <script>
-        // Navigation functionality
-        function toggleNav() {
-            const navMenu = document.getElementById('navMenu');
-            const navToggle = document.querySelector('.nav-toggle');
+        // Navigation Orb functionality
+        let navOrbActive = false;
+
+        function toggleNavOrb() {
+            const navOrb = document.getElementById('navOrb');
+            const navIcon = document.querySelector('.nav-icon');
             
-            navMenu.classList.toggle('open');
+            navOrbActive = !navOrbActive;
             
-            if (navMenu.classList.contains('open')) {
-                navToggle.innerHTML = '✕';
-                navToggle.style.background = 'linear-gradient(135deg, #ef4444, #dc2626)';
+            if (navOrbActive) {
+                navOrb.classList.add('active');
+                navIcon.textContent = '✕';
+                navIcon.style.transform = 'rotate(180deg)';
             } else {
-                navToggle.innerHTML = '☰';
-                navToggle.style.background = 'linear-gradient(135deg, #6366f1, #8b5cf6)';
+                navOrb.classList.remove('active');
+                navIcon.textContent = '✦';
+                navIcon.style.transform = 'rotate(0deg)';
             }
         }
 
         function scrollToSection(sectionId) {
             const section = document.getElementById(sectionId);
-            const navMenu = document.getElementById('navMenu');
-            const navToggle = document.querySelector('.nav-toggle');
-            
             if (section) {
                 section.scrollIntoView({
                     behavior: 'smooth',
                     block: 'start'
                 });
                 
-                // Close navigation menu after clicking
-                navMenu.classList.remove('open');
-                navToggle.innerHTML = '☰';
-                navToggle.style.background = 'linear-gradient(135deg, #6366f1, #8b5cf6)';
+                // Close navigation orb
+                setTimeout(() => {
+                    if (navOrbActive) toggleNavOrb();
+                }, 500);
             }
         }
 
         // Close navigation when clicking outside
         document.addEventListener('click', function(event) {
-            const navMenu = document.getElementById('navMenu');
-            const navToggle = document.querySelector('.nav-toggle');
-            
-            if (!navMenu.contains(event.target) && !navToggle.contains(event.target)) {
-                navMenu.classList.remove('open');
-                navToggle.innerHTML = '☰';
-                navToggle.style.background = 'linear-gradient(135deg, #6366f1, #8b5cf6)';
+            const navOrb = document.getElementById('navOrb');
+            if (!navOrb.contains(event.target) && navOrbActive) {
+                toggleNavOrb();
             }
         });
 
-        // Make section headings clickable to scroll to top of section
-        document.querySelectorAll('.section h2').forEach(heading => {
-            heading.addEventListener('click', function() {
-                this.parentElement.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'start'
-                });
-            });
-        });
+        // Progress bar functionality
+        function updateProgressBar() {
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrollPercent = (scrollTop / scrollHeight) * 100;
+            
+            document.querySelector('.progress-fill').style.width = scrollPercent + '%';
+        }
 
-        // Scroll animation observer
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
+        window.addEventListener('scroll', updateProgressBar);
 
-        const observer = new IntersectionObserver(function(entries) {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('animate');
+        // Fade in animation on scroll
+        function handleScrollAnimations() {
+            const fadeElements = document.querySelectorAll('.fade-in');
+            
+            fadeElements.forEach(element => {
+                const elementTop = element.getBoundingClientRect().top;
+                const elementVisible = 150;
+                
+                if (elementTop < window.innerHeight - elementVisible) {
+                    element.classList.add('visible');
                 }
             });
-        }, observerOptions);
+        }
 
-        // Observe all scroll-animate elements
-        document.querySelectorAll('.scroll-animate').forEach(el => {
-            observer.observe(el);
+        window.addEventListener('scroll', handleScrollAnimations);
+
+        // Initial animation check
+        document.addEventListener('DOMContentLoaded', function() {
+            handleScrollAnimations();
+            updateProgressBar();
         });
 
-        // Add subtle hover effects for better user experience
-        document.querySelectorAll('.card-3d').forEach(card => {
+        // Enhanced hover effects for contact links
+        document.querySelectorAll('.contact-section a').forEach(link => {
+            link.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-3px) scale(1.03)';
+                this.style.boxShadow = '0 10px 30px rgba(0, 0, 0, 0.15)';
+                this.style.background = 'rgba(255, 255, 255, 1) !important';
+                
+                // Add colored border glow based on link type
+                const href = this.getAttribute('href');
+                if (href.includes('mailto')) {
+                    this.style.borderColor = 'rgba(99, 102, 241, 0.6)';
+                    this.style.boxShadow = '0 10px 30px rgba(99, 102, 241, 0.2)';
+                } else if (href.includes('tel')) {
+                    this.style.borderColor = 'rgba(139, 92, 246, 0.6)';
+                    this.style.boxShadow = '0 10px 30px rgba(139, 92, 246, 0.2)';
+                } else if (href.includes('pavansharma-iitr')) {
+                    this.style.borderColor = 'rgba(16, 185, 129, 0.6)';
+                    this.style.boxShadow = '0 10px 30px rgba(16, 185, 129, 0.2)';
+                } else if (href.includes('linkedin')) {
+                    this.style.borderColor = 'rgba(245, 158, 11, 0.6)';
+                    this.style.boxShadow = '0 10px 30px rgba(245, 158, 11, 0.2)';
+                }
+            });
+            
+            link.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0) scale(1)';
+                this.style.background = 'rgba(255, 255, 255, 0.8) !important';
+                this.style.boxShadow = '0 4px 15px rgba(0, 0, 0, 0.1)';
+                
+                // Reset border colors
+                const href = this.getAttribute('href');
+                if (href.includes('mailto')) {
+                    this.style.borderColor = 'rgba(99, 102, 241, 0.3)';
+                } else if (href.includes('tel')) {
+                    this.style.borderColor = 'rgba(139, 92, 246, 0.3)';
+                } else if (href.includes('pavansharma-iitr')) {
+                    this.style.borderColor = 'rgba(16, 185, 129, 0.3)';
+                } else if (href.includes('linkedin')) {
+                    this.style.borderColor = 'rgba(245, 158, 11, 0.3)';
+                }
+            });
+        });
+
+        // Add smooth hover animations to cards
+        document.querySelectorAll('.card').forEach(card => {
             card.addEventListener('mouseenter', function() {
-                this.style.transition = 'all 0.3s ease';
+                this.style.transform = 'translateY(-8px) scale(1.01)';
             });
             
             card.addEventListener('mouseleave', function() {
-                this.style.transition = 'all 0.3s ease';
+                this.style.transform = 'translateY(0) scale(1)';
             });
         });
 
-        // Enhanced smooth scroll for better experience
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                }
-            });
+        // Keyboard navigation support
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape' && navOrbActive) {
+                toggleNavOrb();
+            }
         });
     </script>
 </body>
