@@ -137,6 +137,7 @@
         .nav-orb.active .nav-item:nth-child(7) { transition-delay: 0.4s; }
         .nav-orb.active .nav-item:nth-child(8) { transition-delay: 0.45s; }
         .nav-orb.active .nav-item:nth-child(9) { transition-delay: 0.5s; }
+        .nav-orb.active .nav-item:nth-child(10) { transition-delay: 0.55s; }
 
         .nav-item:hover {
             background: rgba(99, 102, 241, 0.1);
@@ -657,6 +658,7 @@
             <a href="#projects" class="nav-item" onclick="scrollToSection('projects')">🚀 Projects</a>
             <a href="#skills" class="nav-item" onclick="scrollToSection('skills')">💻 Skills</a>
             <a href="#contact" class="nav-item" onclick="scrollToSection('contact')">📧 Contact</a>
+            <a href="Pavan_Resume.pdf" class="nav-item" target="_blank">📄 View CV</a>
         </div>
     </div>
 
@@ -705,6 +707,10 @@
                         <div class="contact-item">
                             <span>💼</span>
                             <a href="https://www.linkedin.com/in/pavan-sharma24" target="_blank">LinkedIn</a>
+                        </div>
+                        <div class="contact-item">
+                            <span>📄</span>
+                            <a href="Pavan_Resume.pdf" target="_blank">View CV</a>
                         </div>
                     </div>
                 </div>
@@ -1057,6 +1063,11 @@
                             <span style="font-size: 1.2em;">💼</span>
                             <span>LinkedIn Profile</span>
                         </a>
+                        
+                        <a href="Pavan_Resume.pdf" target="_blank" style="display: flex; align-items: center; gap: 10px; padding: 15px; background: rgba(0, 0, 0, 0.8) !important; border: 2px solid rgba(255, 255, 255, 0.3); border-radius: 15px; text-decoration: none; color: #ffffff !important; font-weight: 600; transition: all 0.3s ease; backdrop-filter: blur(10px);">
+                            <span style="font-size: 1.2em;">📄</span>
+                            <span>Download CV</span>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -1161,6 +1172,9 @@
                 } else if (href.includes('linkedin')) {
                     this.style.borderColor = 'rgba(245, 158, 11, 0.6)';
                     this.style.boxShadow = '0 10px 30px rgba(245, 158, 11, 0.2)';
+                } else if (href.includes('Pavan_Resume.pdf')) {
+                    this.style.borderColor = 'rgba(236, 72, 153, 0.6)';
+                    this.style.boxShadow = '0 10px 30px rgba(236, 72, 153, 0.2)';
                 }
             });
             
@@ -1179,6 +1193,8 @@
                     this.style.borderColor = 'rgba(16, 185, 129, 0.3)';
                 } else if (href.includes('linkedin')) {
                     this.style.borderColor = 'rgba(245, 158, 11, 0.3)';
+                } else if (href.includes('Pavan_Resume.pdf')) {
+                    this.style.borderColor = 'rgba(236, 72, 153, 0.3)';
                 }
             });
         });
